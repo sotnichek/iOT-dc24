@@ -5,6 +5,8 @@ base="light"
 port = 8808
 headless = true
 enableCORS = false
+enableXsrfProtection = false
+enableWebsocketCompression = false
 
 [browser]
 gatherUsageStats = false
