@@ -8,5 +8,5 @@ headless = true
 
 [browser]
 gatherUsageStats = false
-serverAddress = “www.iot.goldstrumapp.xyz”
+serverAddress = “iot.goldstrumapp.xyz”
 
