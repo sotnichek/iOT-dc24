@@ -3,6 +3,10 @@ base="light"
 
 [server]
 port = 8808
+headless = true
+
 
 [browser]
 gatherUsageStats = false
+serverAddress = “www.iot.goldstrumapp.xyz”
+
