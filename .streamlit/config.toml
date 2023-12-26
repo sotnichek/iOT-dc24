@@ -4,7 +4,8 @@ base="light"
 [server]
 port = 8808
 headless = true
-
+enableCORS = false
 
 [browser]
 gatherUsageStats = false
+
