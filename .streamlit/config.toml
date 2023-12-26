@@ -2,7 +2,7 @@
 base="light"
 
 [server]
-port = 443
+port = 8808
 
 [browser]
 gatherUsageStats = false
