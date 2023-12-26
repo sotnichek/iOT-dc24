@@ -1032,8 +1032,8 @@ def humidity_sensor():
                         st.dataframe(df2_h.style.highlight_max('Humidity'), hide_index=True)
 
                     bool_h1 = True
-                    bool_h2 = False
-                    bool_h3 = False
+                    bool_h2 = True
+                    bool_h3 = True
 
                     ar_list = len(res_h)
 
