@@ -264,8 +264,8 @@ def co2_sensor():
                     filtered_10000 = filter(lambda score: 8000 <= score <= 9999, res_co2)
 
                     bool_400 = True
-                    bool_600 = False
-                    bool_800 = False
+                    bool_600 = True
+                    bool_800 = True
                     bool_1000 = False
                     bool_1500 = False
                     bool_2500 = False
@@ -334,27 +334,27 @@ def co2_sensor():
 
                     fig = go.Figure()
                     fig.add_trace(go.Scatter(x=d_t, y=lst1, fill='tonexty', fillcolor="rgba(0,252,23, 0.7)",
-                                             mode='none', name='Excellent, 400 PPM', visible=bool_400, connectgaps=True,
+                                             mode='none', name='Excellent, 0 - 400 PPM', visible=bool_400, connectgaps=True,
                                              # override default markers+lines
                                              ))
                     fig.add_trace(go.Scatter(x=d_t, y=lst2, fill='tonexty', fillcolor='rgba(92,237,121, 0.7)',
-                                             mode='none', name='Very Good, 600 PPM', visible=bool_600))
+                                             mode='none', name='Very Good, 400 - 600 PPM', visible=bool_600))
                     fig.add_trace(go.Scatter(x=d_t, y=lst3, fill='tonexty', fillcolor='rgba(181,235,73, 0.7)',
-                                             mode='none', name='Good, 800 PPM', visible=bool_800))
+                                             mode='none', name='Good, 600 - 800 PPM', visible=bool_800))
                     fig.add_trace(go.Scatter(x=d_t, y=lst4, fill='tonexty', fillcolor='rgba(219,222,37, 0.7)',
-                                             mode='none', name='Medium, 1000 PPM', visible=bool_1000))
+                                             mode='none', name='Medium, 800 - 1000 PPM', visible=bool_1000))
                     fig.add_trace(go.Scatter(x=d_t, y=lst5, fill='tonexty', fillcolor='rgba(230,171,27, 0.7)',
-                                             mode='none', name='Poor, 1500 PPM', visible=bool_1500))
+                                             mode='none', name='Poor, 1000 - 1500 PPM', visible=bool_1500))
                     fig.add_trace(go.Scatter(x=d_t, y=lst6, fill='tonexty', fillcolor='rgba(203,131,26, 0.7)',
-                                             mode='none', name='Inadequate, 2500 PPM', visible=bool_2500))
+                                             mode='none', name='Inadequate, 1500 - 2500 PPM', visible=bool_2500))
                     fig.add_trace(go.Scatter(x=d_t, y=lst7, fill='tonexty', fillcolor='rgba(219,89,15, 0.7)',
-                                             mode='none', name='Bad, 4000 PPM', visible=bool_4000))
+                                             mode='none', name='Bad, 2500 - 4000 PPM', visible=bool_4000))
                     fig.add_trace(go.Scatter(x=d_t, y=lst8, fill='tonexty', fillcolor='rgba(226,38,11, 0.7)',
-                                             mode='none', name='Very Bad, 5000 PPM', visible=bool_5000))
+                                             mode='none', name='Very Bad, 4000 - 5000 PPM', visible=bool_5000))
                     fig.add_trace(go.Scatter(x=d_t, y=lst9, fill='tonexty', fillcolor='rgba(142,5,5, 0.7)',
-                                             mode='none', name='Dangerous, 8000 PPM', visible=bool_8000))
+                                             mode='none', name='Dangerous, 5000 - 8000 PPM', visible=bool_8000))
                     fig.add_trace(go.Scatter(x=d_t, y=lst10, fill='tonexty', fillcolor='rgba(105,7,7, 0.7)',
-                                             mode='none', name='Very dangerous, 10000 PPM', visible=bool_10000))
+                                             mode='none', name='Very dangerous, 8000 - 10000 PPM', visible=bool_10000))
                     fig.add_trace(go.Scatter(x=d_t, y=res_co2,
                                              mode='lines', name='Index PPM',
                                              line=dict(width=2, color='rgb(122,122,122)')
@@ -1065,12 +1065,12 @@ def humidity_sensor():
 
                     fig = go.Figure()
                     fig.add_trace(go.Scatter(x=d_t, y=art_h_1, fill='tonexty', fillcolor="rgba(194,5,65, 0.7)",
-                                             mode='none', name='To dry, > 30%', visible=bool_h1,
+                                             mode='none', name='To dry, 0% - 39%', visible=bool_h1,
                                              ))
                     fig.add_trace(go.Scatter(x=d_t, y=art_h_2, fill='tonexty', fillcolor='rgba(32,146,158, 0.7)',
-                                             mode='none', name='Optimal 40 - 60 %', visible=bool_h2))
+                                             mode='none', name='Optimal 40% - 69%', visible=bool_h2))
                     fig.add_trace(go.Scatter(x=d_t, y=art_h_3, fill='tonexty', fillcolor='rgba(1,58,250, 0.7)',
-                                             mode='none', name='Too humid < 70 %', visible=bool_h3))
+                                             mode='none', name='Too humid 70% - 100%', visible=bool_h3))
                     fig.add_trace(go.Scatter(x=d_t, y=res_h,
                                              mode='lines', name='Humidity %',
                                              line=dict(width=2, color='rgb(255,255,255)')
