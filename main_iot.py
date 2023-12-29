@@ -14,9 +14,15 @@ hide_streamlit_style = """
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
+            .block-container {
+                    padding-top: 0rem;
+                    padding-bottom: 4rem;
+                
+                }
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.header('Sensors make your business better', divider='rainbow')
 
 current_date = datetime.today()
 future_date = current_date + timedelta(days=-8)
@@ -263,9 +269,9 @@ def co2_sensor():
                     filtered_8000 = filter(lambda score: 5000 <= score <= 7999, res_co2)
                     filtered_10000 = filter(lambda score: 8000 <= score <= 9999, res_co2)
 
-                    bool_400 = True
-                    bool_600 = True
-                    bool_800 = True
+                    bool_400 = False
+                    bool_600 = False
+                    bool_800 = False
                     bool_1000 = False
                     bool_1500 = False
                     bool_2500 = False
