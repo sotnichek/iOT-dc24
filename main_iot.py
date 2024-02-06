@@ -17,12 +17,12 @@ hide_streamlit_style = """
             .block-container {
                     padding-top: 0rem;
                     padding-bottom: 4rem;
-                
+
                 }
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-st.header('Sensors make your business better', divider='rainbow')
+st.header('Sensors help your business do better', divider='rainbow')
 
 current_date = datetime.today()
 future_date = current_date + timedelta(days=-8)
@@ -46,7 +46,6 @@ def init_connection():
         return mysql.connector.connect(**st.secrets["mysql"])
     except mysql.connector.Error as err:
         raise Exception("Something went wrong (╯°益°)╯ ")
-
 
 
 conn = init_connection()
@@ -138,8 +137,8 @@ def current_sensor():
             delta_tvoc_now = ""
 
         col1, col2 = st.columns(2)
-        col1.metric("CO2", f"{last_co2_nw}", f"{delta_co2_nw}")
-        col2.metric("TVOC", f"{last_tvoc_now}", f"{delta_tvoc_now}")
+        col1.metric("CO2 (carbon dioxide concentrations)", f"{last_co2_nw}", f"{delta_co2_nw}")
+        col2.metric("TVOC (Total volatile organic compounds)", f"{last_tvoc_now}", f"{delta_tvoc_now}")
 
         col1, col2 = st.columns(2)
         col1.metric("Temperature", f"{last_temp_now}", f"{delta_temp}")
@@ -230,7 +229,7 @@ def co2_sensor():
 
                     st.divider()
 
-                    st.subheader("CO2 indicators:")
+                    st.subheader("CO2 (carbon dioxide concentrations) indicators:")
 
                     df = pd.DataFrame([data_table], columns=['Max ppm', 'Min ppm', 'Average ppm'])
 
@@ -340,7 +339,8 @@ def co2_sensor():
 
                     fig = go.Figure()
                     fig.add_trace(go.Scatter(x=d_t, y=lst1, fill='tonexty', fillcolor="rgba(0,252,23, 0.7)",
-                                             mode='none', name='Excellent, 0 - 400 PPM', visible=bool_400, connectgaps=True,
+                                             mode='none', name='Excellent, 0 - 400 PPM', visible=bool_400,
+                                             connectgaps=True,
                                              # override default markers+lines
                                              ))
                     fig.add_trace(go.Scatter(x=d_t, y=lst2, fill='tonexty', fillcolor='rgba(92,237,121, 0.7)',
@@ -389,7 +389,7 @@ def co2_sensor():
                     fig2.update_traces(hole=.4, hoverinfo="label+percent+name")
 
                     fig2.update_layout(
-                        title_text="Co2 indicators in percent %",
+                        title_text="PPM indicators in percent %",
                         uniformtext_minsize=10, uniformtext_mode='hide',
                         legend=dict(font=dict(size=12)),
                         margin=dict(
@@ -399,7 +399,7 @@ def co2_sensor():
                             t=50,
                             pad=0
                         ),
-                        annotations=[dict(text='Co2', x=0.50, y=0.5, font_size=20, showarrow=False)])
+                        annotations=[dict(text='PPM', x=0.50, y=0.5, font_size=20, showarrow=False)])
                     st.plotly_chart(fig2, use_container_width=True, config=config)
 
             except IndexError as e:
@@ -496,6 +496,70 @@ def tvoc_sensor():
                     st.divider()
 
                     st.subheader("TVOC indicators:")
+
+                    agree = st.checkbox('What is TVOC? End how TVOC affects indoor air quality: effects on wellbeing and health')
+                    if agree:
+                        st.write('When we think of air quality, people mostly think of the outside world, smog from cars and industry or the fresh air of woods. However, 90% of our daily life is spent indoors: our home, workplace, public buildings and schools. Indoor quality is one of the most important components of well-being, feeling comfortable in a room.  Besides, bad air quality has implications on your productivity and may even harm your health. The Volatile organic components (VOC) may be the least known.')
+                        st.subheader('TVOCS affects the wellbeing, feeling comfortable and health')
+                        st.write('TVOCs affect your sense off wellbeing and if you feel comfortable inside a building. Some VOC’s are even bad for health. Some VOCs are more harmful than others. If a TVOC is harmful also depend on factors as level of exposure and length of time being exposed. Besides, some people -especially children and elderly people- have a higher sensibility then others. Immediate symptoms that some people have experienced soon after exposure to VOCs are eye and respiratory tract irritation, headaches, dizziness, visual disorders and memory impairment. An example: some people get immediately a headache from being in a room which is just painted. Others may find the smell just uncomfortable.')
+                        st.markdown("""
+                        ***TVOCs can cause:***
+                        * Headaches
+                        * Dizziness 
+                        * Nausea
+                        * Eye, nose, and throat irritation
+                        * Coordination loss
+                        * Fatigue
+                        * Some VOC’s (as toluene) cause irritation at normal levels, eg allergic skin reactions
+                        * Bad odor and stale air are uncomfortable and affect people’s feeling of cleanliness
+                        * Some VOC’s as formaldehyde can cause cancer. VOC’s for a long-term exposure in large doses can damage liver, nervous system and kidneys 
+                                    """)
+                        st.subheader('What is TVOC?')
+                        st.write('What is TVOC? TVOC means Total Volatile Organic compounds. Volatile organic compounds are organic chemicals that become a gas at room temperature. There are thousands of VOCs and a multiple of VOC’s are at the same time present. Therefore, the Total VOC is used at most times: measuring the concentration of the total of VOC’s This is easier and less expensive then measuring individual VOC’s.')
+                        st.markdown("""
+                        ***Some examples of VOC’s are:***
+                        * Benzene
+                        * Ethylene glycol
+                        * Formaldehyde
+                        * Methylene chloride
+                        * Tetrachloroethylene
+                        * Toluene                
+                        """)
+                        st.subheader('Where do you find VOC’s?')
+                        st.markdown("""
+                        VOC’s come from many sources, even yourself can be a polluter!
+                        
+                        * Products
+                        * Outside world
+                        
+                        
+                        VOC in Products
+                        
+                        
+                        Many VOC’s come from:
+
+
+
+                        * Cleaners and disinfectants
+                        * Pesticides
+                        * Air fresheners
+                        * Paints and solvents
+                        * Glue
+                        * New furniture and carpets
+                        * Construction materials
+                        * Electronic devices
+                        * Plywood
+
+                        So, some VOC’s may come from everyday life, especially found in sprays and aerosols from cleaners and such. Besides, new construction and renovation may cause significant health concerns. Construction materials, but also the new furniture, carpets and plywood may increase the indoor concentration of VOC’s due to off-gassing. Until the off-gassing has declined, those new products may cause serious threats to your well-being. You can be a polluter yourself, however often far less dangerous then products do.
+
+                        VOC in the outside world
+                        
+                        Vehicle exhaust and indusstry pollution may also cause bad indoor air quality when the polluted air can enter the building due to open windows or air condition that doesn’t work properly. Especially when the building stands in congested or industrial areas.
+
+
+                        
+                        """)
+
 
                     df = pd.DataFrame([data_table], columns=['Max ppb', 'Min ppb', 'Average ppb'])
 
@@ -618,7 +682,7 @@ def tvoc_sensor():
                             t=50,
                             pad=0
                         ),
-                        annotations=[dict(text='Co2', x=0.50, y=0.5, font_size=20, showarrow=False)])
+                        annotations=[dict(text='TVOC', x=0.50, y=0.5, font_size=20, showarrow=False)])
                     st.plotly_chart(fig2, use_container_width=True, config=config)
 
             except IndexError as e:
