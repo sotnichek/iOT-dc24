@@ -22,23 +22,13 @@ hide_streamlit_style = """
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-st.header('Sensors help your business do better', divider='rainbow')
+st.header('Sensors help your business do better.', divider='rainbow')
 
 current_date = datetime.today()
 future_date = current_date + timedelta(days=-8)
 current_date_up = "%" + current_date.strftime('%Y-%m-%d') + "%"
 future_date_up = "%" + future_date.strftime('%Y-%m-%d') + "%"
-
-select_d = st.date_input("Choose a date", format="MM.DD.YYYY")
-select_date = "%" + select_d.strftime('%Y-%m-%d') + "%"
-
-appointment = st.slider(
-    "Schedule your appointment:",
-    value=(time(7, 00), time(21, 00)))
-st_interval = appointment[0].strftime('%H:%M')
-end_interval = appointment[1].strftime('%H:%M')
-select_dt_st = str(select_d.strftime('%Y-%m-%d ')) + str(appointment[0])
-select_dt_end = str(select_d.strftime('%Y-%m-%d ')) + str(appointment[1])
+current_sensor_values = "%" + current_date.strftime('%Y-%m-%d') + "%"
 
 
 def init_connection():
@@ -59,97 +49,147 @@ def run_query(query):
 
 def current_sensor():
     temp_nw = run_query("SELECT `metrics_t` FROM `temperature` WHERE `create_date` LIKE '%s';" %
-                        select_date)
+                        current_sensor_values)
     humidity_nw = run_query("SELECT `metrics_hum` FROM `humidity` WHERE `create_date` LIKE '%s';" %
-                            select_date)
+                            current_sensor_values)
     wea_pre_nw = run_query("SELECT `metrics_p` FROM `weather_pressure` WHERE `create_date` LIKE '%s';" %
-                           select_date)
+                           current_sensor_values)
     co2_nw = run_query("SELECT `metrics_co2` FROM `co2` WHERE `create_date` LIKE '%s';" %
-                       select_date)
+                       current_sensor_values)
     tvoc_nw = run_query("SELECT `metrics_tvoc` FROM `tvoc` WHERE `create_date` LIKE '%s';" %
-                        select_date)
-    if temp_nw or humidity_nw or wea_pre_nw or co2_nw or tvoc_nw:
-        st.title('Current sensor values')
+                        current_sensor_values)
+    status_device = run_query("SELECT `status_chek` FROM `status_device` WHERE `status_chek` = '1';")
+    temp_status = run_query("SELECT `temperature_status` FROM `status_device` WHERE `temperature_status` = '1';")
+    humidity_status = run_query("SELECT `temperature_status` FROM `status_device` WHERE `humidity_status` = '1';")
+    weather_pressure_status = run_query("SELECT `temperature_status` FROM `status_device` WHERE "
+                                        "`weather_pressure_status` = '1';")
+    co2_status = run_query("SELECT `temperature_status` FROM `status_device` WHERE `co2_status` = '1';")
+    tvoc_status = run_query("SELECT `temperature_status` FROM `status_device` WHERE `tvoc_status` = '1';")
 
-        temp_now = [item[0] for item in temp_nw]
-        try:
-            last_temp_now = temp_now[-1]
-            previous_temp_now = temp_now[-2]
-            delta_temp = last_temp_now - previous_temp_now
-            last_temp_now = str(last_temp_now) + " °C"
-            delta_temp = round(delta_temp, 2)
-            delta_temp = str(delta_temp) + " °C"
-        except IndexError as e:
-            print(f"Temp___ERRORs {e}")
-            last_temp_now = "Wait..."
-            delta_temp = ""
 
-        humidity_now = [item[0] for item in humidity_nw]
-        try:
-            last_humidity_now = humidity_now[-1]
-            previous_humidity_now = humidity_now[-2]
-            delta_humidity_now = last_humidity_now - previous_humidity_now
-            last_humidity_now = str(last_humidity_now) + " %"
-            delta_humidity_now = round(delta_humidity_now)
-            delta_humidity_now = str(delta_humidity_now) + " %"
-        except IndexError as e:
-            print(f"Humidity___ERRORs {e}")
-            last_humidity_now = "Wait..."
-            delta_humidity_now = ""
+    if status_device:
 
-        weather_pressure_now = [item[0] for item in wea_pre_nw]
-        try:
-            last_weather_pressure_now = weather_pressure_now[-1]
-            previous_weather_pressure_now = weather_pressure_now[-2]
-            delta_weather_pressure_now = last_weather_pressure_now - previous_weather_pressure_now
-            last_weather_pressure_now = str(last_weather_pressure_now) + " mmhg"
-            delta_weather_pressure_now = round(delta_weather_pressure_now)
-            delta_weather_pressure_now = str(delta_weather_pressure_now) + " mmhg"
-        except IndexError as e:
-            print(f"Weather_pressure___ERRORs {e}")
-            last_weather_pressure_now = "Wait..."
-            delta_weather_pressure_now = ""
+        if temp_nw or humidity_nw or wea_pre_nw or co2_nw or tvoc_nw:
+            st.title('Current sensor values:')
 
-        co2_now = [item[0] for item in co2_nw]
-        try:
-            last_co2_nw = co2_now[-1]
-            previous_co2_nw = co2_now[-2]
-            delta_co2_nw = last_co2_nw - previous_co2_nw
-            last_co2_nw = str(last_co2_nw) + " ppm"
-            delta_co2_nw = round(delta_co2_nw)
-            delta_co2_nw = str(delta_co2_nw) + " ppm"
-        except IndexError as e:
-            print(f"CO_pressure___ERRORs {e}")
-            last_co2_nw = "Wait..."
-            delta_co2_nw = ""
+            if temp_status:
+                temp_now = [item[0] for item in temp_nw]
+                try:
+                    last_temp_now = temp_now[-1]
+                    previous_temp_now = temp_now[-2]
+                    delta_temp = last_temp_now - previous_temp_now
+                    last_temp_now = str(last_temp_now) + " °C"
+                    delta_temp = round(delta_temp, 2)
+                    delta_temp = str(delta_temp) + " °C"
+                except IndexError as e:
+                    print(f"Temp___ERRORs {e}")
+                    last_temp_now = "Wait..."
+                    delta_temp = ""
+            else:
+                last_temp_now = "Receiving data..."
+                delta_temp = ""
 
-        tvoc_now = [item[0] for item in tvoc_nw]
-        try:
-            last_tvoc_now = tvoc_now[-1]
-            previous_tvoc_now = tvoc_now[-2]
-            delta_tvoc_now = last_tvoc_now - previous_tvoc_now
-            last_tvoc_now = str(last_tvoc_now) + " ppb"
-            delta_tvoc_now = round(delta_tvoc_now)
-            delta_tvoc_now = str(delta_tvoc_now) + " ppb"
-        except IndexError as e:
-            print(f"Tvoc_now___ERRORs{e}")
-            last_tvoc_now = "Wait..."
-            delta_tvoc_now = ""
+            if humidity_status:
+                humidity_now = [item[0] for item in humidity_nw]
+                try:
+                    last_humidity_now = humidity_now[-1]
+                    previous_humidity_now = humidity_now[-2]
+                    delta_humidity_now = last_humidity_now - previous_humidity_now
+                    last_humidity_now = str(last_humidity_now) + " %"
+                    delta_humidity_now = round(delta_humidity_now)
+                    delta_humidity_now = str(delta_humidity_now) + " %"
+                except IndexError as e:
+                    print(f"Humidity___ERRORs {e}")
+                    last_humidity_now = "Wait..."
+                    delta_humidity_now = ""
+            else:
+                last_humidity_now = "Receiving data..."
+                delta_humidity_now = ""
 
-        col1, col2 = st.columns(2)
-        col1.metric("CO2 (carbon dioxide concentrations)", f"{last_co2_nw}", f"{delta_co2_nw}")
-        col2.metric("TVOC (Total volatile organic compounds)", f"{last_tvoc_now}", f"{delta_tvoc_now}")
+            if weather_pressure_status:
+                weather_pressure_now = [item[0] for item in wea_pre_nw]
+                try:
+                    last_weather_pressure_now = weather_pressure_now[-1]
+                    previous_weather_pressure_now = weather_pressure_now[-2]
+                    delta_weather_pressure_now = last_weather_pressure_now - previous_weather_pressure_now
+                    last_weather_pressure_now = str(last_weather_pressure_now) + " mmhg"
+                    delta_weather_pressure_now = round(delta_weather_pressure_now)
+                    delta_weather_pressure_now = str(delta_weather_pressure_now) + " mmhg"
+                except IndexError as e:
+                    print(f"Weather_pressure___ERRORs {e}")
+                    last_weather_pressure_now = "Wait..."
+                    delta_weather_pressure_now = ""
+            else:
+                last_weather_pressure_now = "Receiving data..."
+                delta_weather_pressure_now = ""
 
-        col1, col2 = st.columns(2)
-        col1.metric("Temperature", f"{last_temp_now}", f"{delta_temp}")
-        col2.metric("Humidity", f"{last_humidity_now}", f"{delta_humidity_now}")
-        st.metric(label="Weather Pressure", value=f"{last_weather_pressure_now}",
-                  delta=f"{delta_weather_pressure_now}")
+            if co2_status:
+                co2_now = [item[0] for item in co2_nw]
+                try:
+                    last_co2_nw = co2_now[-1]
+                    previous_co2_nw = co2_now[-2]
+                    delta_co2_nw = last_co2_nw - previous_co2_nw
+                    last_co2_nw = str(last_co2_nw) + " ppm"
+                    delta_co2_nw = round(delta_co2_nw)
+                    delta_co2_nw = str(delta_co2_nw) + " ppm"
+                except IndexError as e:
+                    print(f"CO_pressure___ERRORs {e}")
+                    last_co2_nw = "Wait..."
+                    delta_co2_nw = ""
+            else:
+                last_co2_nw = "Receiving data..."
+                delta_co2_nw = ""
+
+            if tvoc_status:
+                tvoc_now = [item[0] for item in tvoc_nw]
+                try:
+                    last_tvoc_now = tvoc_now[-1]
+                    previous_tvoc_now = tvoc_now[-2]
+                    delta_tvoc_now = last_tvoc_now - previous_tvoc_now
+                    last_tvoc_now = str(last_tvoc_now) + " ppb"
+                    delta_tvoc_now = round(delta_tvoc_now)
+                    delta_tvoc_now = str(delta_tvoc_now) + " ppb"
+                except IndexError as e:
+                    print(f"Tvoc_now___ERRORs{e}")
+                    last_tvoc_now = "Wait..."
+                    delta_tvoc_now = ""
+            else:
+                last_tvoc_now = "Receiving data..."
+                delta_tvoc_now = ""
+
+            col1, col2 = st.columns(2)
+            col1.metric("CO2 (carbon dioxide concentrations)", f"{last_co2_nw}", f"{delta_co2_nw}")
+            col2.metric("TVOC (Total volatile organic compounds)", f"{last_tvoc_now}", f"{delta_tvoc_now}")
+
+            col1, col2 = st.columns(2)
+            col1.metric("Temperature", f"{last_temp_now}", f"{delta_temp}")
+            col2.metric("Humidity", f"{last_humidity_now}", f"{delta_humidity_now}")
+            st.metric(label="Weather Pressure", value=f"{last_weather_pressure_now}",
+                      delta=f"{delta_weather_pressure_now}")
+        else:
+            st.title('There is no data to display, please try later')
     else:
-        st.title('There is no data to display, please try later')
+        st.header(
 
+                  ":orange[***The device is not connected.***]"
 
+                  )
+
+    if st.button("Refresh", key='restart_current'):
+        st.rerun()
 current_sensor()
+
+
+st.title('Sensor values history:')
+select_d = st.date_input("Choose a date:", format="MM.DD.YYYY")
+select_date = "%" + select_d.strftime('%Y-%m-%d') + "%"
+appointment = st.slider(
+    "Schedule your appointment:",
+    value=(time(7, 00), time(22, 00)))
+st_interval = appointment[0].strftime('%H:%M')
+end_interval = appointment[1].strftime('%H:%M')
+select_dt_st = str(select_d.strftime('%Y-%m-%d ')) + str(appointment[0])
+select_dt_end = str(select_d.strftime('%Y-%m-%d ')) + str(appointment[1])
 
 
 def co2_sensor():
@@ -1291,5 +1331,5 @@ def weather_pressure_s():
 
 weather_pressure_s()
 
-if st.button("Refresh"):
+if st.button("Refresh", key='restart_history'):
     st.rerun()
