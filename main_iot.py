@@ -66,7 +66,6 @@ def current_sensor():
     co2_status = run_query("SELECT `temperature_status` FROM `status_device` WHERE `co2_status` = '1';")
     tvoc_status = run_query("SELECT `temperature_status` FROM `status_device` WHERE `tvoc_status` = '1';")
 
-
     if status_device:
 
         if temp_nw or humidity_nw or wea_pre_nw or co2_nw or tvoc_nw:
@@ -158,34 +157,34 @@ def current_sensor():
                 delta_tvoc_now = ""
 
             col1, col2 = st.columns(2)
-            col1.metric("CO2 (carbon dioxide concentrations)", f"{last_co2_nw}", f"{delta_co2_nw}")
-            col2.metric("TVOC (Total volatile organic compounds)", f"{last_tvoc_now}", f"{delta_tvoc_now}")
+            col1.metric("CO2 (carbon dioxide concentrations)", f"{last_co2_nw}", f"{delta_co2_nw}", delta_color="inverse")
+            col2.metric("TVOC (Total volatile organic compounds)", f"{last_tvoc_now}", f"{delta_tvoc_now}", delta_color="inverse")
 
             col1, col2 = st.columns(2)
             col1.metric("Temperature", f"{last_temp_now}", f"{delta_temp}")
             col2.metric("Humidity", f"{last_humidity_now}", f"{delta_humidity_now}")
-            st.metric(label="Weather Pressure", value=f"{last_weather_pressure_now}",
-                      delta=f"{delta_weather_pressure_now}")
+            st.metric(label="Weather Pressure", value=f"{last_weather_pressure_now}")
         else:
             st.title('There is no data to display, please try later')
     else:
         st.header(
 
-                  ":orange[***The device is not connected.***]"
+            ":orange[***The device is not connected.***]"
 
-                  )
+        )
 
     if st.button("Refresh", key='restart_current'):
         st.rerun()
-current_sensor()
 
+
+current_sensor()
 
 st.title('Sensor values history:')
 select_d = st.date_input("Choose a date:", format="MM.DD.YYYY")
 select_date = "%" + select_d.strftime('%Y-%m-%d') + "%"
 appointment = st.slider(
     "Schedule your appointment:",
-    value=(time(7, 00), time(22, 00)))
+    value=(time(00, 00), time(23, 59)))
 st_interval = appointment[0].strftime('%H:%M')
 end_interval = appointment[1].strftime('%H:%M')
 select_dt_st = str(select_d.strftime('%Y-%m-%d ')) + str(appointment[0])
@@ -537,11 +536,14 @@ def tvoc_sensor():
 
                     st.subheader("TVOC indicators:")
 
-                    agree = st.checkbox('What is TVOC? End how TVOC affects indoor air quality: effects on wellbeing and health')
+                    agree = st.checkbox(
+                        'What is TVOC? End how TVOC affects indoor air quality: effects on wellbeing and health')
                     if agree:
-                        st.write('When we think of air quality, people mostly think of the outside world, smog from cars and industry or the fresh air of woods. However, 90% of our daily life is spent indoors: our home, workplace, public buildings and schools. Indoor quality is one of the most important components of well-being, feeling comfortable in a room.  Besides, bad air quality has implications on your productivity and may even harm your health. The Volatile organic components (VOC) may be the least known.')
+                        st.write(
+                            'When we think of air quality, people mostly think of the outside world, smog from cars and industry or the fresh air of woods. However, 90% of our daily life is spent indoors: our home, workplace, public buildings and schools. Indoor quality is one of the most important components of well-being, feeling comfortable in a room.  Besides, bad air quality has implications on your productivity and may even harm your health. The Volatile organic components (VOC) may be the least known.')
                         st.subheader('TVOCS affects the wellbeing, feeling comfortable and health')
-                        st.write('TVOCs affect your sense off wellbeing and if you feel comfortable inside a building. Some VOC’s are even bad for health. Some VOCs are more harmful than others. If a TVOC is harmful also depend on factors as level of exposure and length of time being exposed. Besides, some people -especially children and elderly people- have a higher sensibility then others. Immediate symptoms that some people have experienced soon after exposure to VOCs are eye and respiratory tract irritation, headaches, dizziness, visual disorders and memory impairment. An example: some people get immediately a headache from being in a room which is just painted. Others may find the smell just uncomfortable.')
+                        st.write(
+                            'TVOCs affect your sense off wellbeing and if you feel comfortable inside a building. Some VOC’s are even bad for health. Some VOCs are more harmful than others. If a TVOC is harmful also depend on factors as level of exposure and length of time being exposed. Besides, some people -especially children and elderly people- have a higher sensibility then others. Immediate symptoms that some people have experienced soon after exposure to VOCs are eye and respiratory tract irritation, headaches, dizziness, visual disorders and memory impairment. An example: some people get immediately a headache from being in a room which is just painted. Others may find the smell just uncomfortable.')
                         st.markdown("""
                         ***TVOCs can cause:***
                         * Headaches
@@ -555,7 +557,8 @@ def tvoc_sensor():
                         * Some VOC’s as formaldehyde can cause cancer. VOC’s for a long-term exposure in large doses can damage liver, nervous system and kidneys 
                                     """)
                         st.subheader('What is TVOC?')
-                        st.write('What is TVOC? TVOC means Total Volatile Organic compounds. Volatile organic compounds are organic chemicals that become a gas at room temperature. There are thousands of VOCs and a multiple of VOC’s are at the same time present. Therefore, the Total VOC is used at most times: measuring the concentration of the total of VOC’s This is easier and less expensive then measuring individual VOC’s.')
+                        st.write(
+                            'What is TVOC? TVOC means Total Volatile Organic compounds. Volatile organic compounds are organic chemicals that become a gas at room temperature. There are thousands of VOCs and a multiple of VOC’s are at the same time present. Therefore, the Total VOC is used at most times: measuring the concentration of the total of VOC’s This is easier and less expensive then measuring individual VOC’s.')
                         st.markdown("""
                         ***Some examples of VOC’s are:***
                         * Benzene
@@ -568,14 +571,14 @@ def tvoc_sensor():
                         st.subheader('Where do you find VOC’s?')
                         st.markdown("""
                         VOC’s come from many sources, even yourself can be a polluter!
-                        
+
                         * Products
                         * Outside world
-                        
-                        
+
+
                         VOC in Products
-                        
-                        
+
+
                         Many VOC’s come from:
 
 
@@ -593,13 +596,12 @@ def tvoc_sensor():
                         So, some VOC’s may come from everyday life, especially found in sprays and aerosols from cleaners and such. Besides, new construction and renovation may cause significant health concerns. Construction materials, but also the new furniture, carpets and plywood may increase the indoor concentration of VOC’s due to off-gassing. Until the off-gassing has declined, those new products may cause serious threats to your well-being. You can be a polluter yourself, however often far less dangerous then products do.
 
                         VOC in the outside world
-                        
+
                         Vehicle exhaust and indusstry pollution may also cause bad indoor air quality when the polluted air can enter the building due to open windows or air condition that doesn’t work properly. Especially when the building stands in congested or industrial areas.
 
 
-                        
-                        """)
 
+                        """)
 
                     df = pd.DataFrame([data_table], columns=['Max ppb', 'Min ppb', 'Average ppb'])
 
