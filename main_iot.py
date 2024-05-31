@@ -7,7 +7,7 @@ import plotly.graph_objs as go
 
 sys.tracebacklimit = 0
 
-st.set_page_config(layout="wide", page_title="co2 super sensor", page_icon="🧊", initial_sidebar_state="auto",
+st.set_page_config(layout="wide", page_title="co2 sensor", page_icon="🧊", initial_sidebar_state="auto",
                    menu_items=None)
 hide_streamlit_style = """
             <style>
